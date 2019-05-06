@@ -1,9 +1,12 @@
 import constants from './../constants';
-const { initialState, types } = constants;
+const { initialState, types, songList } = constants;
+import v4 from 'uuid/v4';
 
 const lyricChangeReducer = (state = initialState.songsById, action) => {
   let newSongsByIdEntry;
   let newSongsByIdStateSlice;
+  let newState;
+  let newId = v4();
   console.log(action);
   switch (action.type) {
   case types.NEXT_LYRIC:
@@ -23,9 +26,28 @@ const lyricChangeReducer = (state = initialState.songsById, action) => {
       [action.currentSongId]: newSongsByIdEntry
     });
     return newSongsByIdStateSlice;
+    case types.REQUEST_SONG:
+      newSongsByIdEntry = {
+        isFetching: true,
+        title: action.title,
+        songId: action.songId
+      };
+      newSongsByIdStateSlice = Object.assign({}, state, {
+        [action.songId]: newSongsByIdEntry
+      })
+      return newSongsByIdStateSlice;
   default:
     return state;
   }
 };
 
 export default lyricChangeReducer;
+
+
+
+// case types.HELLO_THERE:
+// let arr = {title: 'sldkfj', artist: 'lakdsjf', songId: 1,
+// arrayPosition: 0};
+// newState = Object.assign({[newId]: arr}, state)
+// console.log(newState)
+// return newState;
