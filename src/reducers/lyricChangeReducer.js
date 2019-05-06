@@ -7,7 +7,6 @@ const lyricChangeReducer = (state = initialState.songsById, action) => {
   let newSongsByIdStateSlice;
   let newState;
   let newId = v4();
-  console.log(action);
   switch (action.type) {
   case types.NEXT_LYRIC:
     const newArrayPosition = state[action.currentSongId].arrayPosition + 1;
@@ -49,19 +48,25 @@ const lyricChangeReducer = (state = initialState.songsById, action) => {
       newSongsByIdStateSlice = Object.assign({}, state, {
         [action.songId]: newSongsByIdEntry
       });
-      return newSongsByIdStateSlice;
+      return newSongsByIdStateSlice
+    case types.HELLO_THERE:
+      let arr = {title: 'sldkfj', artist: 'lakdsjf', songId: 1,
+        arrayPosition: 0};
+        newState = Object.assign({[newId]: arr}, state)
+        let stuff = Object.keys(newState);
+        // let things = Object.keys()
+        for (let i=0; i < stuff.length; i++){
+          let id = stuff[i];
+          console.log(newState);
+          if (id === state.key){
+            console.log("hi")
+          }
+        }
+        console.log(stuff)
+      return newState;
   default:
     return state;
   }
 };
 
 export default lyricChangeReducer;
-
-
-
-// case types.HELLO_THERE:
-// let arr = {title: 'sldkfj', artist: 'lakdsjf', songId: 1,
-// arrayPosition: 0};
-// newState = Object.assign({[newId]: arr}, state)
-// console.log(newState)
-// return newState;
