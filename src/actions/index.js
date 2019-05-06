@@ -25,9 +25,16 @@ export function fetchSongId(title){
       response => response.json(),
       error => console.log('An Error Occured.', error)
     ).then(function(json) {
-      console.log('Check out this sweet api response:', json);
-    })
-  }
+      if (json.message.body.track_list.length > 0) {
+        const musicMatchId = json.message.body.track_list[0].track.track_id;
+        const artist = json.message.body.track_list[0].track.artist_name;
+        const title = json.message.body.track_list[0].track.track_name;
+        fetchLyrics(title, artist, musicMatchId, localSongId, dispatch);
+      } else {
+        console.log('We could\'t locate a song under that ID!');
+      }
+    });
+  };
 }
 
 export const requestSong = (title, localSongId) => ({
@@ -35,6 +42,32 @@ export const requestSong = (title, localSongId) => ({
   title,
   songId: localSongId
 })
+
+export function fetchLyrics(title, artist, musicMatchId, localSongId, dispatch) {
+  return fetch('http://api.musixmatch.com/ws/1.1/track.lyrics.get?track_id=' + musicMatchId + '&apikey=294b0c5b9d65363bdf37076d24caba03').then(
+    response => response.json(),
+    error => console.log('An error occurred.', error)
+  ).then(function(json){
+    if (json.message.body.lyrics) {
+      let lyrics = json.message.body.lyrics.lyrics_body;
+      lyrics = lyrics.replace('"', '');
+      const songArray = lyrics.split(/\n/g).filter(entry => entry!="");
+      dispatch(receiveSong(title, artist, localSongId, songArray));
+      dispatch(changeSong(localSongId));
+    } else {
+      console.log('We couldn\'t locate lyrics for this song!');
+    }
+  });
+}
+
+export const receiveSong = (title, artist, songId, songArray) => ({
+  type: types.RECEIVE_SONG,
+  songId,
+  title,
+  artist,
+  songArray,
+  receivedAt: Date.now()
+});
 
 export const hello = () => ({
   type: types.HELLO_THERE
