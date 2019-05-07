@@ -54,15 +54,20 @@ const lyricChangeReducer = (state = initialState.songsById, action) => {
         arrayPosition: 0};
         newState = Object.assign({[newId]: arr}, state)
         let stuff = Object.keys(newState);
-        // let things = Object.keys()
+        let id = []
         for (let i=0; i < stuff.length; i++){
-          let id = stuff[i];
-          console.log(newState);
-          if (id === state.key){
-            console.log("hi")
-          }
+          id.push(stuff[i]);
         }
-        console.log(stuff)
+        id.forEach(function(el){
+          console.log(el)
+          if (el === stuff[3]){
+            console.log(el)
+          }
+        })
+        // console.log(state)
+        // console.log(these)
+        // console.log(id)
+        // console.log(stuff)
       return newState;
   default:
     return state;
